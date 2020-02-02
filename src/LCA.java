@@ -8,58 +8,78 @@ import java.io.*;
 import java.util.*;
 import static java.lang.Math.*;
 
-public class _1294C {
+public class LCA {
+
+    static LinkedList<Integer> adj[];
 
     static void Mangni_ke_bail_ke_dant_na_dekhal_jye() {
         t = ni();
-
+        int c = 1;
         while (t-- > 0) {
             n = ni();
-            ArrayList<Integer> ar = new ArrayList<>();
-            for (int i = 2; i * i <= (n); i++) {
-                //pl(n);
-                while (n % i == 0) {
-                    ar.add(i);
-                    n /= i;
+            adj = new LinkedList[n + 1];
+            for (int i = 1; i <= n; i++) adj[i] = new LinkedList<>();
+            for (int i = 1; i <= n; i++) {
+                int j = ni();
+                for (int k = 0; k < j; k++) {
+                    int y = ni();
+                    adj[i].add(y);
+                    adj[y].add(i);
                 }
             }
-            //pl(n+"here");
-            if (n > 2) ar.add(n);
-            //pl(ar);
-            if (ar.size() < 3) pl("NO");
-            else {
-                if (ar.size() == 3) {
-                    if (ar.get(0).equals(ar.get(1)) || ar.get(1).equals(ar.get(2))) pl("NO");
-                    else pl("YES\n" + ar.get(0) + " " + ar.get(1) + " " + ar.get(2));
-                    continue;
-                }
-                long a = ar.get(0);
-                long b = (long) ar.get(1);
-                int i= 2;
-                if(a==b){
-                    b *= ar.get(2);
-                    i=3;
-                }
-                long pro = 1;
-                for (; i < ar.size(); i++) pro *= ar.get(i);
-                if (pro == 1 || a == pro || b == pro) pl("NO");
-                else pl("YES\n" + a + " " + b + " " + pro);
+            preprocess();
+            int q = ni();
+            pl("Case " + (c++) + ":");
+            while (q-- > 0) {
+                pl(lca(ni(), ni()));
             }
-            //pl(ar);
         }
     }
 
-    static class data{
-        int a, b;
-        data(int a, int b){
-            this.a=a;
-            this.b=b;
+    static int[][] parent;static  int[] tin; static int[] tout;
+    static int timer;
+
+    static void preprocess(){
+        timer  = 0;
+        tin = new int[n + 1];
+        tout = new int[n + 1];
+        l = Integer.toBinaryString(n).length() + 1; // ceil(log2(n))+1;
+        parent = new int[n + 1][l + 1];
+
+        dfs(1,1);
+    }
+
+    static void dfs(int i, int p) {
+        parent[i][0] = p;
+        tin[i] = ++timer;
+
+        for (int j = 1; j <= l; j++)
+            parent[i][j] = parent[parent[i][j - 1]][j - 1];
+
+        for (int x : adj[i]) {
+            if (x == p) continue;
+            dfs(x, i);
         }
 
-        public String toString(){
-            return "("+a+" "+b+")";
-        }
+        tout[i] = ++timer;
     }
+
+    static int lca(int u, int v) {
+        if (is_ancestor(u, v)) return u;
+        if (is_ancestor(v, u)) return v;
+
+        for (int i = l; i >= 0; i--) {
+            if (!is_ancestor(parent[u][i], v))
+                u = parent[u][i];
+        }
+
+        return parent[u][0];
+    }
+
+    static boolean is_ancestor(int u, int v) {
+        return tin[u] <= tin[v] && tout[u] >= tout[v];
+    }
+
 
     //----------------------------------------The main code ends here------------------------------------------------------
     /*-------------------------------------------------------------------------------------------------------------------*/
@@ -211,8 +231,8 @@ public class _1294C {
 
     public static void main(String[] args) {      //threading has been used to increase the stack size.
         try{
-            input = new AwesomeInput(System.in);
-            pw = new PrintWriter(System.out, true);
+//            input = new AwesomeInput(System.in);
+//            pw = new PrintWriter(System.out, true);
             input = new AwesomeInput(new FileInputStream("/home/saurabh/Desktop/input.txt"));
             pw = new PrintWriter(new BufferedWriter(new FileWriter("/home/saurabh/Desktop/output.txt")), true);
 
