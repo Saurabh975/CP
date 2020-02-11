@@ -9,13 +9,65 @@ import java.util.*;
 
 import static java.lang.Math.*;
 
-public class _1296B {
+public class _1185F {
 
     static void Mangni_ke_bail_ke_dant_na_dekhal_jye() {
-        t = ni();
-        while (t-- > 0) {
-            double n = ni();
-            pl((long)(n/0.9));
+        n = ni();
+        m = ni();
+        int emp[] = new int[520];
+        for (int i = 0; i < n; i++) {
+            t = ni();
+            int sum = 0;
+            while (t-- > 0) sum |= 1 << ni() - 1;
+            //pl(sum);
+            emp[sum]++;
+        }
+        int piz_id[] = new int[520];
+        long piz[] = new long[520];
+        HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+        Arrays.fill(piz, mod9);
+        for (int i = 1; i <= m; i++) {
+            int c = ni();
+            t = ni();
+            int sum = 0;
+            while (t-- > 0) sum |= 1 << ni() - 1;
+            if (piz[sum] > c) {
+                piz[sum] = c;
+                ArrayList<Integer> ar = new ArrayList<>();
+                ar.add(i);
+                map.put(sum, ar);
+
+            }
+            else if(piz[sum] == c)map.get(sum).add(i);
+        }
+        //pl(map);
+        int ans = -1;
+        int piz1 = 0, piz2 = 1;
+        for (int i = 0; i < 512; i++) {
+            if (piz[i] == mod9) continue;
+            for (int j = i + (map.get(i).size()>=2 ? 0 : 1); j <= 512; j++) {
+                if (piz[j] == mod9) continue;
+
+                int sum = 0;
+                for (int k = 0; k <= 512; k++) if (((i | j) & k) == k) sum += emp[k];
+                if (sum > ans) {
+                    ans = sum;
+                    piz1 = i;
+                    piz2 = j;
+                } else if (sum == ans && piz[piz1] + piz[piz2] > piz[i] + piz[j]) {
+                    piz1 = i;
+                    piz2 = j;
+                }
+            }
+        }
+        if (ans == -1) {
+            pl("1 2");
+        }
+        else {
+            if(piz1==piz2){
+                pl(map.get(piz1).get(0)+" "+map.get(piz1).get(1));
+            }
+            else pl(map.get(piz1).get(0)+" "+map.get(piz2).get(0));
         }
     }
 
