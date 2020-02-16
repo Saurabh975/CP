@@ -7,68 +7,46 @@
 import java.io.*;
 import java.util.*;
 
-import static java.lang.Math.*;
+public class _1304B {
 
-public class pens {
-    static int pen[];
     static void Mangni_ke_bail_ke_dant_na_dekhal_jye() {
         t = ni();
         while (t-- > 0) {
             n = ni();
-            pen = new int[1 << 22];
-            k = ni();
-            char ch[] = ns().toCharArray();
-            for (int i = 1; i <= k; i++) {
-                char temp[] = ns().toCharArray();
-                int sum = 0;
-                for (int j = 0; j < temp.length; j++) {
-                    sum |= 1 << (temp[j] - 'a');
-                }
-                pen[sum] = i;
-            }
-
-            Vidhayak();
-
-            ArrayList<data> ans = new ArrayList<>();
-            int c = 0, cur = 0, temp = 0;
+            long ar[] = new long[n];
+            for (int i = 0; i < n; i++) ar[i] = nl();
+            long ans = 0;
+            ArrayList<Long> temp = new ArrayList<>();
             for (int i = 0; i < n; i++) {
-                cur = temp | (1 << (ch[i] - 'a'));
-                if (pen[cur] == 0) {
-                    ans.add(new data(pen[temp], c));
-                    temp = 1 << (ch[i] - 'a');
-                    c = 1;
-                } else {
-                    c++;
-                    temp = cur;
+                if (ar[i] == -1) {
+                    if(i-1>=0 && ar[i-1]!=-1)temp.add(ar[i-1]);
+                    if(i+1<n && ar[i+1]!=-1)temp.add(ar[i+1]);
                 }
-            }
-            ans.add(new data(pen[temp], c));
 
-            for (data x : ans) {
-                for (int j = 0; j < x.b; j++) p(x.a);
             }
-            pl();
+            Collections.sort(temp);
+            if (temp.size() == 0) ans = -1;
+            else {
+                ans = temp.get(0) + temp.get(temp.size() - 1);
+                ans >>= 1;
+            }
+
+            long max = Integer.MIN_VALUE;
+            for (int i = 1; i < n; i++) {
+                long prev = ar[i - 1] == -1 ? ans : ar[i - 1];
+                long cur = ar[i] == -1 ? ans : ar[i];
+
+                max = Math.max(max, Math.abs(prev-cur));
+            }
+            if(ans==-1){
+                pl("0 0");
+            }
+            else
+            pl(max+" "+ans);
+            ///pl(temp);
         }
     }
 
-    static class data{
-        int a, b;
-        data(int a, int b){
-            this.a=a;
-            this.b=b;
-        }
-    }
-
-    static void Vidhayak() {
-        for (int i = (1 << 21); i > 0; i--) {
-            if (pen[i] == 0) continue;
-            for (int j = 0; j <= 21; j++) {
-                int ind = i ^ (1 << j);
-
-                if ((i & (1 << j)) != 0) pen[ind] = pen[i];
-            }
-        }
-    }
 
     //----------------------------------------The main code ends here------------------------------------------------------
     /*-------------------------------------------------------------------------------------------------------------------*/
@@ -92,7 +70,7 @@ public class pens {
         private byte[] buf = new byte[1024];
         private int curChar;
         private int numChars;
-        private SpaceCharFilter filter;
+        private AwesomeInput.SpaceCharFilter filter;
 
         private AwesomeInput(InputStream incoming) {
             this.letsDoIT = incoming;

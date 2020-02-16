@@ -9,66 +9,31 @@ import java.util.*;
 
 import static java.lang.Math.*;
 
-public class pens {
-    static int pen[];
+public class _1304C {
+
     static void Mangni_ke_bail_ke_dant_na_dekhal_jye() {
         t = ni();
         while (t-- > 0) {
-            n = ni();
-            pen = new int[1 << 22];
-            k = ni();
-            char ch[] = ns().toCharArray();
-            for (int i = 1; i <= k; i++) {
-                char temp[] = ns().toCharArray();
-                int sum = 0;
-                for (int j = 0; j < temp.length; j++) {
-                    sum |= 1 << (temp[j] - 'a');
-                }
-                pen[sum] = i;
-            }
+            long n = ni();
+            long m = ni();
+            long c = n - m;
+            long sum = 0;
 
-            Vidhayak();
+            long q = c/(m+1);
+            long rem = c%(m+1);
 
-            ArrayList<data> ans = new ArrayList<>();
-            int c = 0, cur = 0, temp = 0;
-            for (int i = 0; i < n; i++) {
-                cur = temp | (1 << (ch[i] - 'a'));
-                if (pen[cur] == 0) {
-                    ans.add(new data(pen[temp], c));
-                    temp = 1 << (ch[i] - 'a');
-                    c = 1;
-                } else {
-                    c++;
-                    temp = cur;
-                }
-            }
-            ans.add(new data(pen[temp], c));
+            sum += n*(n+1);
 
-            for (data x : ans) {
-                for (int j = 0; j < x.b; j++) p(x.a);
-            }
-            pl();
+            sum >>= 1;
+            sum -= rem * ((q+1)*(q+2) >> 1);
+            sum -= (m+1-rem) * ((q*(q+1))>>1L);
+
+            pl(sum);
+
         }
+
     }
 
-    static class data{
-        int a, b;
-        data(int a, int b){
-            this.a=a;
-            this.b=b;
-        }
-    }
-
-    static void Vidhayak() {
-        for (int i = (1 << 21); i > 0; i--) {
-            if (pen[i] == 0) continue;
-            for (int j = 0; j <= 21; j++) {
-                int ind = i ^ (1 << j);
-
-                if ((i & (1 << j)) != 0) pen[ind] = pen[i];
-            }
-        }
-    }
 
     //----------------------------------------The main code ends here------------------------------------------------------
     /*-------------------------------------------------------------------------------------------------------------------*/
@@ -81,6 +46,7 @@ public class pens {
     static PrintWriter pw;
 
     static long power(long a, long b) {
+
         if (b == 0) return 1;
         if ((b & 1) == 1) return a * power(a * a, b >> 1);
         return power(a * a, b >> 1);
@@ -194,7 +160,7 @@ public class pens {
     public static int[] fastSort(int[] f) {
         int n = f.length;
         int[] to = new int[n];
-        {
+        { long x = max(0,0);
             int[] b = new int[65537];
             for (int i = 0; i < n; i++) b[1 + (f[i] & 0xffff)]++;
             for (int i = 1; i <= 65536; i++) b[i] += b[i - 1];

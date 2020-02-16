@@ -3,72 +3,37 @@
 //               Kya hua, code samajhne ki koshish kar rhe ho?? Mat karo,
 //                      mujhe bhi samajh nhi aata kya likha hai
 
-
 import java.io.*;
 import java.util.*;
 
 import static java.lang.Math.*;
 
-public class pens {
-    static int pen[];
+public class mmaxper {
+    static int[][] xy;
+    static int dp[][];
     static void Mangni_ke_bail_ke_dant_na_dekhal_jye() {
-        t = ni();
-        while (t-- > 0) {
-            n = ni();
-            pen = new int[1 << 22];
-            k = ni();
-            char ch[] = ns().toCharArray();
-            for (int i = 1; i <= k; i++) {
-                char temp[] = ns().toCharArray();
-                int sum = 0;
-                for (int j = 0; j < temp.length; j++) {
-                    sum |= 1 << (temp[j] - 'a');
-                }
-                pen[sum] = i;
-            }
-
-            Vidhayak();
-
-            ArrayList<data> ans = new ArrayList<>();
-            int c = 0, cur = 0, temp = 0;
-            for (int i = 0; i < n; i++) {
-                cur = temp | (1 << (ch[i] - 'a'));
-                if (pen[cur] == 0) {
-                    ans.add(new data(pen[temp], c));
-                    temp = 1 << (ch[i] - 'a');
-                    c = 1;
-                } else {
-                    c++;
-                    temp = cur;
-                }
-            }
-            ans.add(new data(pen[temp], c));
-
-            for (data x : ans) {
-                for (int j = 0; j < x.b; j++) p(x.a);
-            }
-            pl();
+        n = ni();
+        xy = new int[n][2];
+        for (int i = 0; i < n; i++) {
+            xy[i][0] = ni();
+            xy[i][1] = ni();
         }
+        dp = new int[n][2];
+        dp[0][0] = xy[0][0];
+        dp[0][1] = xy[0][1];
+        pl(max(rec(n - 1, 0), rec(n - 1, 1)));
     }
 
-    static class data{
-        int a, b;
-        data(int a, int b){
-            this.a=a;
-            this.b=b;
-        }
+    static int rec(int n, int i) {
+        if (dp[n][i] != 0) return dp[n][i];
+
+        int temp1 = xy[n][i] + abs(xy[n - 1][1] - xy[n][i ^ 1]) + rec(n - 1, 0);
+
+        int temp2 = xy[n][i] + abs(xy[n - 1][0] - xy[n][i ^ 1]) + rec(n - 1, 1);
+
+        return dp[n][i] = max(temp1, temp2);
     }
 
-    static void Vidhayak() {
-        for (int i = (1 << 21); i > 0; i--) {
-            if (pen[i] == 0) continue;
-            for (int j = 0; j <= 21; j++) {
-                int ind = i ^ (1 << j);
-
-                if ((i & (1 << j)) != 0) pen[ind] = pen[i];
-            }
-        }
-    }
 
     //----------------------------------------The main code ends here------------------------------------------------------
     /*-------------------------------------------------------------------------------------------------------------------*/

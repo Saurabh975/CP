@@ -7,68 +7,35 @@
 import java.io.*;
 import java.util.*;
 
-import static java.lang.Math.*;
+public class _1303B {
 
-public class pens {
-    static int pen[];
     static void Mangni_ke_bail_ke_dant_na_dekhal_jye() {
         t = ni();
         while (t-- > 0) {
-            n = ni();
-            pen = new int[1 << 22];
-            k = ni();
-            char ch[] = ns().toCharArray();
-            for (int i = 1; i <= k; i++) {
-                char temp[] = ns().toCharArray();
-                int sum = 0;
-                for (int j = 0; j < temp.length; j++) {
-                    sum |= 1 << (temp[j] - 'a');
+            long n = nl(), g = nl(), b = nl();
+            long l = 0, r= Long.MAX_VALUE, ans = 0;
+            while(l<=r){
+                long mid = l + r >> 1;
+                if(vidhayak(mid,g,b,n)){
+                    ans = mid;
+                    r = mid - 1;
                 }
-                pen[sum] = i;
+                else l = mid + 1;
             }
-
-            Vidhayak();
-
-            ArrayList<data> ans = new ArrayList<>();
-            int c = 0, cur = 0, temp = 0;
-            for (int i = 0; i < n; i++) {
-                cur = temp | (1 << (ch[i] - 'a'));
-                if (pen[cur] == 0) {
-                    ans.add(new data(pen[temp], c));
-                    temp = 1 << (ch[i] - 'a');
-                    c = 1;
-                } else {
-                    c++;
-                    temp = cur;
-                }
-            }
-            ans.add(new data(pen[temp], c));
-
-            for (data x : ans) {
-                for (int j = 0; j < x.b; j++) p(x.a);
-            }
-            pl();
+            pl(ans);
         }
     }
 
-    static class data{
-        int a, b;
-        data(int a, int b){
-            this.a=a;
-            this.b=b;
-        }
+    static boolean vidhayak(long x,long g, long b, long n) {
+        if (x < n) return false;
+        long q = x / (g + b);
+        long rem = x % (g + b);
+
+        long sum = q * g + Math.min(g,rem);
+
+        return sum >= (n+1)>>1;
     }
 
-    static void Vidhayak() {
-        for (int i = (1 << 21); i > 0; i--) {
-            if (pen[i] == 0) continue;
-            for (int j = 0; j <= 21; j++) {
-                int ind = i ^ (1 << j);
-
-                if ((i & (1 << j)) != 0) pen[ind] = pen[i];
-            }
-        }
-    }
 
     //----------------------------------------The main code ends here------------------------------------------------------
     /*-------------------------------------------------------------------------------------------------------------------*/
