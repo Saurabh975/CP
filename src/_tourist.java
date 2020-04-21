@@ -9,106 +9,57 @@ import java.util.*;
 
 import static java.lang.Math.*;
 
-public class _backpack {
-
-    static int vmax;
-    static LinkedList<data> saaman[];
-    static ArrayList<ArrayList<data>> dibba;
+public class _tourist {
+    static long dp[][][] = new long[101][101][101];
+    static long ar[][] = new long[101][101];
 
     static void Mangni_ke_bail_ke_dant_na_dekhal_jye() {
-
         t = ni();
-
         while (t-- > 0) {
-            vmax = ni();
+
+            m = ni();
             n = ni();
 
-            int ar[] = new int[n + 1];
-            data inp[] = new data[n + 1];
-
-            for (int i = 1; i <= n; i++) {
-                inp[i] = new data(ni(), ni(), ni());
-                ar[i] = inp[i].c;
-            }
-
-            saaman = new LinkedList[n + 1];
-            for (int i = 0; i <= n; i++) saaman[i] = new LinkedList<>();
-
-            for (int i = 1; i <= n; i++) {
-                if (inp[i].c == 0) saaman[i].addFirst(inp[i]);
-                else saaman[inp[i].c].addLast(inp[i]);
-            }
-            dibba = new ArrayList<>();
-            int ind = -1;
-            for (int i = 0; i <= n; i++) {
-                if (saaman[i].size() > 0) {
-                    ind++;
-                    dibba.add(new ArrayList<>());
-                    dibba.get(ind).add(new data(saaman[i].get(0).a, saaman[i].get(0).a * saaman[i].get(0).b, 0));
-
-                    for (int x = 1; x < 1 << (saaman[i].size() - 1); x++) {
-                        jodo_LAURALASSAN(ind, i, x);
-                    }
-
+            for (int i = 0; i < n + 1; i++) {
+                for (int j = 0; j < m + 1; j++) {
+                    for (int k = 0; k < n + 1; k++)
+                        dp[i][j][k] = -1;
                 }
             }
 
-            //pl(dibba);
-
-            dp_lagao_MC();
-        }
-    }
-
-    static void dp_lagao_MC() {
-
-        long dp[][] = new long[dibba.size() + 5][vmax + 5];
-
-        for (int i = 1; i <= dibba.size(); i++) {
-            for (int j = 0; j <= vmax; j++) {
-
-                dp[i][j] = dp[i - 1][j];
-
-                for (int k = 0; k < dibba.get(i - 1).size(); k++) {
-                    if (dibba.get(i - 1).get(k).a <= j) {
-                        dp[i][j] = max(dp[i][j], dp[i - 1][j - (int) dibba.get(i - 1).get(k).a] + dibba.get(i - 1).get(k).b);
-                    }
+            for (int i = 0; i < n; i++) {
+                char ch[] = ns().toCharArray();
+                for (int j = 0; j < m; j++) {
+                    if (ch[j] == '*') ar[i + 1][j + 1] = 1;
+                    else if (ch[j] == '#') ar[i + 1][j + 1] = Integer.MIN_VALUE;
+                    else ar[i + 1][j + 1] = 0;
                 }
             }
-        }
 
-        pl(dp[dibba.size()][vmax]);
-
-    }
-
-    static void jodo_LAURALASSAN(int ind, int i, int x) {
-        long vol = saaman[i].get(0).a;
-        long total = saaman[i].get(0).a * saaman[i].get(0).b;
-
-        for (int k = 0; k < 5; k++) {
-            if (((x >> k) & 1) == 1) {
-                vol += saaman[i].get(k + 1).a;
-                total += saaman[i].get(k + 1).a * saaman[i].get(k + 1).b;
-            }
-        }
-
-        dibba.get(ind).add(new data(vol, total, 0));
-
-    }
-
-    static class data {
-        long a, b;
-        int c;
-
-        data(long a, long b, int c) {
-            this.a = a;
-            this.b = b;
-            this.c = c;
-        }
-
-        public String toString() {
-            return "{" + a + ", " + b + ", " + c + "}";
+            pl(bhosdi_KE(n, m, n));
         }
     }
+
+    static long bhosdi_KE(int i, int j, int k) {
+        int l = i + j - k;
+
+        if (i < 1 || j < 1 || k < 1 || l < 1) return Integer.MIN_VALUE;
+
+        if (ar[i][j] == Integer.MIN_VALUE || ar[k][l] == Integer.MIN_VALUE) return Integer.MIN_VALUE;
+
+        if (dp[i][j][k] != -1) return dp[i][j][k];
+
+        if (i == 1 && j == 1 && k == 1 && l == 1) return ar[i][j];
+
+        dp[i][j][k] = max(bhosdi_KE(i - 1, j, k), bhosdi_KE(i, j - 1, k));
+
+        dp[i][j][k] = max(dp[i][j][k], max(bhosdi_KE(i - 1, j, k - 1), bhosdi_KE(i, j - 1, k - 1)));
+
+        dp[i][j][k] += ar[i][j];
+
+        return dp[i][j][k] += i != k || j != l ? ar[k][l] : 0;
+    }
+
 
     //----------------------------------------The main code ends here------------------------------------------------------
     /*-------------------------------------------------------------------------------------------------------------------*/
