@@ -106,7 +106,7 @@ public class _templeq {
 
         aalaspan_dikhao(i, l, r);
 
-        if (l > r_ind_arr || r < l_ind_arr) return;
+        if (l > r_ind_arr || r < l_ind_arr  ) return;
 
         if (l >= l_ind_arr && r <= r_ind_arr) {
             aalsi[i] = val;

@@ -1,5 +1,10 @@
 //                I know stuff but probably my rating tells otherwise...
 
+//                  It is strange,-but true; for truth is always strange;
+//                      Stranger than fiction: if it could be told,
+//                      How much would novels gain by the exchange!
+//                      How differently the world would men behold!
+
 //               Kya hua, code samajhne ki koshish kar rhe ho?? Mat karo,
 //                      mujhe bhi samajh nhi aata kya likha hai
 
@@ -9,11 +14,24 @@ import java.util.*;
 
 import static java.lang.Math.*;
 
-public class temp {
+public class _1265E {
 
     static void Mangni_ke_bail_ke_dant_na_dekhal_jye() {
         n = ni();
-        for (int i = 0; i < 21; i++) pl((n & (1 << i)) + " " + ((n >> i) & 1));
+        m = 998244353;
+        long ar[] = new long[n];
+        for (int i = 0; i < n; i++) {
+            ar[i] = ni() * modpow(100, m - 2, m) % m;
+        }
+
+        long ans = 0, p = 1;
+
+        for (int i = 0; i < n; i++) {
+            ans += p; ans %= m;
+            p *= ar[i]; p %= m;
+        }
+
+        pl(ans * modpow(p, m - 2, m) % m);
     }
 
 
@@ -32,6 +50,13 @@ public class temp {
         if (b == 0) return 1;
         if ((b & 1) == 1) return a * power(a * a, b >> 1);
         return power(a * a, b >> 1);
+    }
+
+    static long modpow(long a, long b, long m){
+        if(b == 0)return 1;
+        //a %= m;
+        if((b & 1) == 1) return a * modpow(a * a % m, b >> 1, m) % m;
+        return modpow(a * a % m, b >> 1, m) % m;
     }
 
     // The Awesome Input Code is a fast IO method //
