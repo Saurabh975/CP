@@ -12,8 +12,16 @@ import static java.lang.Math.*;
 public class temp {
 
     static void Mangni_ke_bail_ke_dant_na_dekhal_jye() {
-        n = ni();
-        for (int i = 0; i < 21; i++) pl((n & (1 << i)) + " " + ((n >> i) & 1));
+        int k = 4;
+        n = 3;
+        pl(rec(n, k));
+    }
+
+    static int rec(int n, int k){
+        if(n == 1)return 1;
+        int ans = (rec(n - 1, k) + k - 1) % n + 1;
+        pl(ans);
+        return ans;
     }
 
 
