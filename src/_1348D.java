@@ -1,33 +1,38 @@
 //                I know stuff but probably my rating tells otherwise...
-
-//               Kya hua, code samajhne ki koshish kar rhe ho?? Mat karo,
-//                      mujhe bhi samajh nhi aata kya likha hai
+//                          BAS AISE HI CODING KAR RHE HAI
 
 
 import java.io.*;
 import java.util.*;
+
 import static java.lang.Math.*;
 
-public class _129D {
-
+public class _1348D {
     static void Mangni_ke_bail_ke_dant_na_dekhal_jye() {
         t = ni();
-        long x = nl();
-
-        TreeMap<Long, Long> ar = new TreeMap<>();
-        TreeMap<Long, Long> map = new TreeMap<>();
-        for (int i = 0; i <= t; i++) ar.put((long) i, 0L);
-        //for(int i=0;i<x;i++)map.put((long)i,0l);
-        while (t-- > 0) {
-            long a = nl();
-            a %= x;
-            long temp = a + (map.containsKey(a) ? map.get(a) : 0);
-            if (!map.containsKey(a)) map.put(a, x);
-            else map.put(a, map.get(a) + x);
-            ar.remove(temp);
-            pl(ar.firstKey());
+        while(t-- > 0){
+            jao_answer_khoj_ke_print_karo(ni());
         }
     }
+
+    static void jao_answer_khoj_ke_print_karo(int n) {
+        ArrayList<Integer> ar = new ArrayList<>();
+        for (int i = 1; i <= n; i <<= 1) {
+            ar.add((i));
+            n -= i;
+        }
+
+        if (n > 0) {
+            ar.add(n);
+        }
+        Collections.sort(ar);
+
+        pl(ar.size() - 1);
+        for (int i = 1; i < ar.size(); i++) p(ar.get(i) - ar.get(i - 1));
+        pl();
+    }
+
+
 
     //----------------------------------------The main code ends here------------------------------------------------------
     /*-------------------------------------------------------------------------------------------------------------------*/
@@ -36,13 +41,11 @@ public class _129D {
 
     static int mod9 = 1_000_000_007;
     static int n, m, l, k, t;
-    //static AwesomeInput input = new AwesomeInput(System.in);
     static AwesomeInput input;
-    static BufferedWriter bw;
-
-    static PrintWriter pw ;
+    static PrintWriter pw;
 
     static long power(long a, long b) {
+        long x = max(a, b);
         if (b == 0) return 1;
         if ((b & 1) == 1) return a * power(a * a, b >> 1);
         return power(a * a, b >> 1);
@@ -54,7 +57,7 @@ public class _129D {
         private byte[] buf = new byte[1024];
         private int curChar;
         private int numChars;
-        private SpaceCharFilter filter;
+        private AwesomeInput.SpaceCharFilter filter;
 
         private AwesomeInput(InputStream incoming) {
             this.letsDoIT = incoming;
@@ -178,14 +181,14 @@ public class _129D {
     }
 
     public static void main(String[] args) {      //threading has been used to increase the stack size.
-        try{
+        try {
             input = new AwesomeInput(System.in);
             pw = new PrintWriter(System.out, true);
-//            input = new AwesomeInput(new FileInputStream("/home/saurabh/Desktop/input.txt"));
-//            pw = new PrintWriter(new BufferedWriter(new FileWriter("/home/saurabh/Desktop/output.txt")), true);
+            input = new AwesomeInput(new FileInputStream(new File("input.txt")));
+            pw = new PrintWriter(new BufferedWriter(new FileWriter(new File("output.txt"))), true);
 
+        } catch (Exception e) {
         }
-        catch(Exception e){}
 
         new Thread(null, null, "AApan_gand_hawai_dusar_ke_kare_dawai", 1 << 25)  //the last parameter is stack size desired.
         {
@@ -204,4 +207,3 @@ public class _129D {
         }.start();
     }
 }
-
